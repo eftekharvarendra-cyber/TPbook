@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">MCQ Web App | Biohaters Academy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Hind Siliguri', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Hind Siliguri -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax CDN for Equation Rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.4);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.7);
+        }
+        /* Flip card styles */
+        .perspective {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .perspective.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-emerald-500/20 shrink-0">
+                        <i class="fa-solid fa-flask"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg leading-tight" id="header-brand-title">Biohaters Academy</h1>
+                            <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800" id="header-subject-tag">MCQ Portal</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block" id="header-chapter-subtitle">CSV ফাইল লোড করুন (<span class="q-count-text">০</span>টি MCQ)</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <nav class="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-700/60 p-1 rounded-xl text-xs font-semibold">
+                    <button onclick="switchTab('practice')" id="nav-btn-practice" class="px-3.5 py-1.5 rounded-lg transition bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm flex items-center gap-1.5 font-bold">
+                        <i class="fa-solid fa-pen-to-square"></i> অনুশীলন
+                    </button>
+                    <button onclick="switchTab('exam')" id="nav-btn-exam" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 dark:text-slate-300 hover:text-emerald-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left"></i> মডেল টেস্ট
+                    </button>
+                    <button onclick="switchTab('flashcards')" id="nav-btn-flashcards" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 dark:text-slate-300 hover:text-emerald-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group"></i> ফ্ল্যাশকার্ড
+                    </button>
+                    <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 dark:text-slate-300 hover:text-emerald-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-chart-pie"></i> ড্যাশবোর্ড
+                    </button>
+                </nav>
+
+                <!-- Search Bar & User Stats Controls -->
+                <div class="flex items-center gap-2.5">
+                    
+                    <!-- Search input -->
+                    <div class="relative hidden sm:block w-36 lg:w-48">
+                        <input type="text" id="top-search-input" onkeyup="handleGlobalSearch()" placeholder="প্রশ্ন খুঁজুন..." 
+                               class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-700/70 border border-transparent focus:border-emerald-500 rounded-lg text-slate-800 dark:text-slate-200 focus:outline-none transition">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-slate-400"></i>
+                    </div>
+
+                    <!-- User Badges (XP / Streak) -->
+                    <div class="hidden lg:flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-xl text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+                        <span class="flex items-center gap-1" title="আপনার অর্জিত XP Points">
+                            <i class="fa-solid fa-bolt text-amber-500"></i> <span id="user-xp-display">০</span> XP
+                        </span>
+                        <span class="text-slate-300 dark:text-slate-700">|</span>
+                        <span class="flex items-center gap-1" title="ধারাবাহিকতা (Streak)">
+                            <i class="fa-solid fa-fire text-orange-500"></i> <span id="user-streak-display">১</span> দিন
+                        </span>
+                    </div>
+
+                    <!-- Bookmarks Counter Button -->
+                    <button onclick="filterBookmarksOnly()" class="relative p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="বুকমার্ক করা প্রশ্নসমূহ">
+                        <i class="fa-solid fa-bookmark text-base"></i>
+                        <span id="nav-bookmark-badge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center">০</span>
+                    </button>
+
+                    <!-- Dark / Light Theme Toggle Switch -->
+                    <button id="theme-toggle-btn" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="থিম পরিবর্তন">
+                        <i id="theme-toggle-icon" class="fa-solid fa-moon text-base"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Tabs Bottom -->
+        <div class="flex md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 justify-around text-xs font-semibold py-1">
+            <button onclick="switchTab('practice')" id="mob-nav-practice" class="py-1.5 px-3 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-0.5 font-bold">
+                <i class="fa-solid fa-pen-to-square text-sm"></i> অনুশীলন
+            </button>
+            <button onclick="switchTab('exam')" id="mob-nav-exam" class="py-1.5 px-3 text-slate-500 dark:text-slate-400 flex flex-col items-center gap-0.5">
+                <i class="fa-solid fa-clock-rotate-left text-sm"></i> পরীক্ষা
+            </button>
+            <button onclick="switchTab('flashcards')" id="mob-nav-flashcards" class="py-1.5 px-3 text-slate-500 dark:text-slate-400 flex flex-col items-center gap-0.5">
+                <i class="fa-solid fa-layer-group text-sm"></i> কার্ডস
+            </button>
+            <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="py-1.5 px-3 text-slate-500 dark:text-slate-400 flex flex-col items-center gap-0.5">
+                <i class="fa-solid fa-chart-pie text-sm"></i> ড্যাশবোর্ড
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Hero Card & Summary Bar -->
+        <div id="hero-banner" class="mb-8 rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            <!-- Decorative Background SVG Graphic -->
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                <i class="fa-solid fa-flask-vial text-[240px]"></i>
+            </div>
+
+            <div class="relative z-10 max-w-3xl">
+                <div class="inline-flex items-center gap-2 bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 px-3 py-1 rounded-full text-emerald-300 text-xs font-bold mb-3">
+                    <i class="fa-solid fa-file-csv"></i> ইন্টারঅ্যাক্টিভ প্রশ্নব্যাংক
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 leading-snug" id="hero-main-title">
+                    কোনো প্রশ্ন লোড করা হয়নি
+                </h2>
+                <p class="text-emerald-100/80 text-xs sm:text-sm leading-relaxed mb-6" id="hero-description">
+                    অনুশীলন ও মডেল টেস্ট শুরু করতে অনুগ্রহ করে ড্যাশবোর্ড থেকে একটি CSV প্রশ্নব্যাংক আপলোড করুন।
+                </p>
+
+                <!-- Stats Badges Strip -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 p-3 rounded-2xl">
+                        <p class="text-[10px] text-emerald-200 uppercase font-semibold">মোট প্রশ্ন</p>
+                        <p class="text-xl font-extrabold"><span class="q-count-text">০</span> টি MCQ</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 p-3 rounded-2xl">
+                        <p class="text-[10px] text-emerald-200 uppercase font-semibold">পরীক্ষার সময়</p>
+                        <p class="text-xl font-extrabold" id="hero-exam-time"><span id="hero-exam-minutes">০</span> মিনিট</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 p-3 rounded-2xl">
+                        <p class="text-[10px] text-emerald-200 uppercase font-semibold">মান বণ্টন</p>
+                        <p class="text-xl font-extrabold"><span class="q-count-text">০</span> নম্বর</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 p-3 rounded-2xl">
+                        <p class="text-[10px] text-emerald-200 uppercase font-semibold">আপনার অগ্রগতি</p>
+                        <p class="text-xl font-extrabold" id="hero-progress-text">০% সম্পন্ন</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mt-4 w-full bg-slate-700/50 rounded-full h-2 overflow-hidden">
+                    <div id="hero-progress-bar" class="bg-gradient-to-r from-emerald-400 to-teal-300 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 1: PRACTICE MODE -->
+        <section id="tab-content-practice" class="space-y-6">
+            
+            <!-- Controls Bar (Filter & Actions) -->
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-700 flex flex-wrap items-center justify-between gap-4">
+                
+                <!-- Filter Pills -->
+                <div class="flex items-center gap-1.5 flex-wrap text-xs">
+                    <span class="text-slate-500 font-bold mr-1 hidden sm:inline">ফিল্টার:</span>
+                    <button onclick="setFilter('all')" id="btn-filter-all" class="px-3 py-1.5 rounded-xl font-bold bg-emerald-500 text-white shadow-sm transition">
+                        সকল প্রশ্ন (<span id="cnt-all">০</span>)
+                    </button>
+                    <button onclick="setFilter('unanswered')" id="btn-filter-unanswered" class="px-3 py-1.5 rounded-xl font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                        উত্তরহীন (<span id="cnt-unanswered">০</span>)
+                    </button>
+                    <button onclick="setFilter('answered')" id="btn-filter-answered" class="px-3 py-1.5 rounded-xl font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                        উত্তরকৃত (<span id="cnt-answered">০</span>)
+                    </button>
+                    <button onclick="setFilter('bookmarked')" id="btn-filter-bookmarked" class="px-3 py-1.5 rounded-xl font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                        <i class="fa-solid fa-bookmark text-amber-500"></i> বুকমার্ক (<span id="cnt-bookmarked">০</span>)
+                    </button>
+                </div>
+
+                <!-- Reset & Quick Actions -->
+                <div class="flex items-center gap-2">
+                    <button onclick="resetPracticeProgress()" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> রিসেট
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Layout with Question List & Side Navigator Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                
+                <!-- Questions List Container (Left 3 cols) -->
+                <div class="lg:col-span-3 space-y-4" id="practice-questions-container">
+                    <!-- Dynamic Question Cards Rendered Here -->
+                </div>
+
+                <!-- Side Quick-Jump OMR Palette (Right 1 col) -->
+                <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm sticky top-20">
+                    <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100 dark:border-slate-700">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            <i class="fa-solid fa-grip"></i> নেভিগেটর (১-<span class="q-count-text">০</span>)
+                        </h3>
+                        <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold" id="side-accuracy-text">সঠিক: ০%</span>
+                    </div>
+
+                    <!-- Grid Palette -->
+                    <div class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-6 gap-1.5 max-h-[420px] overflow-y-auto p-1" id="practice-side-grid">
+                        <!-- Dynamic Buttons generated here -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-2 text-[10px] text-slate-500">
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> সঠিক</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> ভুল</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 inline-block"></span> অপঠিত</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: LIVE MODEL TEST MODE -->
+        <section id="tab-content-exam" class="hidden space-y-6">
+            
+            <!-- Exam Intro / Instructions Card -->
+            <div id="exam-intro-card" class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 text-center max-w-2xl mx-auto space-y-5 shadow-lg">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mx-auto shadow-inner">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">অনলাইন মডেল টেস্টে আপনাকে স্বাগতম!</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        এই মডেল টেস্টে সর্বমোট <strong class="text-emerald-600"><span class="q-count-text">০</span> টি প্রশ্ন</strong> রয়েছে। সময় বরাদ্দ <strong class="text-emerald-600"><span id="exam-intro-time">০</span> মিনিট</strong>। সাবমিট করার পর আপনার বিস্তারিত স্কোর কার্ড এবং নির্ভুল বিশ্লেষণ প্রদর্শন করা হবে।
+                    </p>
+                </div>
+
+                <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 p-4 rounded-2xl text-left text-xs text-amber-800 dark:text-amber-200 space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> নির্দেশনা:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>প্রতিটি সঠিক উত্তরের জন্য ১ নম্বর পাবেন।</li>
+                        <li>কোনো নেগেটিভ মার্কিং নেই।</li>
+                        <li>সময় শেষ হয়ে গেলে পরীক্ষা স্বয়ংক্রিয়ভাবে জমা হয়ে যাবে।</li>
+                    </ul>
+                </div>
+
+                <button onclick="startLiveExam()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm rounded-xl hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-600/30 transition transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-play mr-2"></i> মডেল টেস্ট শুরু করুন
+                </button>
+            </div>
+
+            <!-- Active Live Exam Container (Hidden initially) -->
+            <div id="exam-active-container" class="hidden space-y-6">
+                
+                <!-- Live Sticky Timer Header Bar -->
+                <div class="sticky top-20 z-30 bg-slate-900 text-white p-4 rounded-2xl shadow-xl border border-slate-700 flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="relative flex items-center justify-center">
+                            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">লাইভ মডেল টেস্ট</p>
+                            <h4 class="text-sm font-bold text-slate-100" id="exam-live-chapter-title">অনলাইন পরীক্ষা</h4>
+                        </div>
+                    </div>
+
+                    <!-- Timer Display -->
+                    <div class="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700">
+                        <i class="fa-solid fa-clock text-amber-400 text-sm"></i>
+                        <span id="exam-timer-text" class="font-mono text-lg font-bold text-amber-400">০০:০০</span>
+                    </div>
+
+                    <!-- Submit Exam Button -->
+                    <button onclick="submitExamWithConfirmation()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> পরীক্ষা সাবমিট
+                    </button>
+                </div>
+
+                <!-- Exam Question & Side OMR Palette -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                    
+                    <!-- Exam Questions List -->
+                    <div class="lg:col-span-3 space-y-4" id="exam-questions-list">
+                        <!-- Questions without immediate answers -->
+                    </div>
+
+                    <!-- Side Palette Grid for Exam -->
+                    <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm sticky top-40">
+                        <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100 dark:border-slate-700">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">OMR শিট নেভিগেটর</h3>
+                            <span class="text-xs font-bold text-slate-600 dark:text-slate-300" id="exam-answered-counter">০ / <span class="q-count-text">০</span></span>
+                        </div>
+
+                        <div class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-6 gap-1.5 max-h-[380px] overflow-y-auto p-1" id="exam-side-grid">
+                            <!-- OMR Grid buttons -->
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-2 text-[10px] text-slate-500">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> উত্তরকৃত</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 inline-block"></span> বাকি</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Exam Scorecard Result View (Hidden initially) -->
+            <div id="exam-result-container" class="hidden space-y-6">
+                <!-- Result Summary Box -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-xl text-center max-w-3xl mx-auto space-y-6">
+                    <div id="result-badge-icon" class="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-4xl mx-auto shadow-inner">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white" id="result-title">ফলাফল প্রকাশিত হয়েছে!</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" id="result-subtext">আপনার অর্জিত মোট নম্বর ও বিস্তারিত পরিসংখ্যান নিচে দেওয়া হলো</p>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-600">
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">মোট স্কোর</p>
+                            <p class="text-2xl font-black text-emerald-600 dark:text-emerald-400" id="res-score-text">০ / <span class="q-count-text">০</span></p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-600">
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">সঠিক উত্তর</p>
+                            <p class="text-2xl font-black text-emerald-500" id="res-correct-text">০</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-600">
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">ভুল উত্তর</p>
+                            <p class="text-2xl font-black text-rose-500" id="res-wrong-text">০</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-600">
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">একুরেসি %</p>
+                            <p class="text-2xl font-black text-amber-500" id="res-accuracy-text">০%</p>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="flex items-center justify-center gap-3 flex-wrap">
+                        <button onclick="scrollToReviewAnswers()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                            <i class="fa-solid fa-list-check mr-1.5"></i> উত্তরপত্র রিভিউ দেখুন
+                        </button>
+                        <button onclick="resetExamToStart()" class="px-6 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl hover:bg-slate-300 transition">
+                            <i class="fa-solid fa-rotate-right mr-1.5"></i> পুনরায় পরীক্ষা দিন
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Answer Review Section -->
+                <div id="exam-review-section" class="space-y-4 pt-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-file-circle-check text-emerald-500"></i> পরীক্ষার সমাধান ও উত্তরপত্র রিভিউ
+                    </h3>
+                    <div id="exam-review-container" class="space-y-4">
+                        <!-- Exam Question Reviews with correct / incorrect badges -->
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SECTION 3: FLASHCARDS MODE -->
+        <section id="tab-content-flashcards" class="hidden space-y-6">
+            <div class="max-w-xl mx-auto space-y-6 text-center">
+                
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">স্মার্ট মোড</span>
+                    <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">দ্রুত রিভিশন ফ্ল্যাশকার্ড</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">কার্ডে ক্লিক করে সঠিক উত্তর ও ব্যাখ্যা উন্মোচন করুন</p>
+                </div>
+
+                <!-- Flip Card Component -->
+                <div class="perspective w-full h-80 cursor-pointer" onclick="flipFlashcard(this)">
+                    <div id="flashcard-inner" class="flip-card-inner relative w-full h-full rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 flex items-center justify-center">
+                        
+                        <!-- Front View (Question) -->
+                        <div class="flip-card-front absolute inset-0 p-8 flex flex-col justify-between items-center text-center">
+                            <div class="w-full flex justify-between text-xs text-slate-400 font-bold">
+                                <span>প্রশ্ন নম্বর: <span id="fc-number">০</span>/<span class="q-count-text">০</span></span>
+                                <span><i class="fa-solid fa-hand-pointer"></i> ক্লিক করে ঘুরান</span>
+                            </div>
+
+                            <p class="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 leading-relaxed px-2" id="fc-question">
+                                কোনো প্রশ্ন নেই। ড্যাশবোর্ড থেকে CSV ফাইল আপলোড করুন।
+                            </p>
+
+                            <div class="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+                                <i class="fa-solid fa-rotate mr-1"></i> উত্তর দেখতে ফ্লিপ করুন
+                            </div>
+                        </div>
+
+                        <!-- Back View (Answer & Explanation) -->
+                        <div class="flip-card-back absolute inset-0 p-8 flex flex-col justify-between items-center text-center bg-gradient-to-br from-emerald-900 to-slate-900 text-white rounded-3xl">
+                            <div class="w-full text-right text-xs text-emerald-300">
+                                <i class="fa-solid fa-circle-check"></i> সমাধান
+                            </div>
+
+                            <div class="space-y-2">
+                                <p class="text-emerald-400 font-extrabold text-base sm:text-lg" id="fc-answer">
+                                    সঠিক উত্তর: -
+                                </p>
+                                <p class="text-xs text-slate-200 leading-relaxed max-h-32 overflow-y-auto px-2" id="fc-explanation">
+                                    -
+                                </p>
+                            </div>
+
+                            <div class="text-[10px] text-slate-400">
+                                পরবর্তী কার্ডের জন্য নিচের বাটনে চাপ দিন
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls for Flashcard -->
+                <div class="flex items-center justify-center gap-4">
+                    <button onclick="prevFlashcard()" class="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-600 transition flex items-center justify-center text-lg shadow-sm">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button onclick="nextFlashcard()" class="px-6 py-3 rounded-2xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 transition shadow-lg shadow-emerald-600/20 flex items-center gap-2">
+                        পরবর্তী কার্ড <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: DASHBOARD & ANALYTICS -->
+        <section id="tab-content-dashboard" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Summary Overview -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center text-lg font-bold">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white">সার্বিক অগ্রগতি</h4>
+                            <p class="text-xs text-slate-500">আপনার অধ্যায় ভিত্তিক পরিসংখ্যান</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs font-semibold">
+                        <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-700">
+                            <span class="text-slate-500">উত্তরকৃত মোট প্রশ্ন:</span>
+                            <span class="text-slate-900 dark:text-white font-bold" id="dash-answered-cnt">০ / <span class="q-count-text">০</span></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-700">
+                            <span class="text-slate-500">সঠিক উত্তর হার (Accuracy):</span>
+                            <span class="text-emerald-600 font-bold" id="dash-accuracy-text">০%</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-700">
+                            <span class="text-slate-500">বুকমার্ককৃত কঠিন প্রশ্ন:</span>
+                            <span class="text-amber-500 font-bold" id="dash-bookmark-cnt">০</span>
+                        </div>
+                        <div class="flex justify-between py-1.5">
+                            <span class="text-slate-500">মোট অর্জিত XP:</span>
+                            <span class="text-emerald-500 font-bold" id="dash-xp-cnt">০ XP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV Upload Panel (Dashboard) -->
+                <div class="md:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-300 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-file-csv"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">CSV থেকে কন্টেন্ট আপলোড করুন</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                    আপনার তৈরি করা CSV ফাইল আপলোড করে এক ক্লিকে ওয়েবসাইটের শিরোনাম, বিবরণ, প্রশ্ন, মডেল টেস্ট ও ব্যাখ্যা ডায়নামিকভাবে পরিবর্তন করুন।
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 mb-4">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">CSV ফাইল নির্বাচন করুন:</label>
+                            <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+                                <input id="csv-upload-input" type="file" accept=".csv,text/csv" class="block w-full text-xs text-slate-600 dark:text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-emerald-600 file:text-white file:font-semibold hover:file:bg-emerald-700 cursor-pointer">
+                                <button type="button" onclick="uploadQuestionsCSV()" class="shrink-0 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition shadow-md shadow-emerald-600/20">
+                                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i> ডেটা আপডেট করুন
+                                </button>
+                            </div>
+                            <p id="csv-upload-status" role="status" class="text-xs mt-3 text-slate-500 dark:text-slate-400">
+                                <i class="fa-solid fa-info-circle mr-1"></i> সমর্থিত কলাম: <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">question</code>, <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">optionA</code>, <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">optionB</code>, <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">optionC</code>, <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">optionD</code>, <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">answer</code>, <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">explanation</code>।
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-3">
+                        <span class="text-xs text-slate-500">নমুনা CSV ফরম্যাট দেখতে চান?</span>
+                        <button type="button" onclick="downloadCSVTemplate()" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-file-arrow-down"></i> নমুনা CSV ডাউনলোড
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+            <p class="font-bold text-slate-700 dark:text-slate-300">Biohaters Chemistry Academy &copy; 2026</p>
+            <p id="footer-subtitle">MCQ Interactive Learning Portal</p>
+        </div>
+    </footer>
+
+    <!-- COMPLETE JAVASCRIPT LOGIC -->
+    <script>
+        // --- INITIAL DATASET (EMPTY BY DEFAULT) ---
+        let questionsData = [];
+
+        // --- GLOBAL APP STATE ---
+        let userAnswers = {};
+        let bookmarks = new Set();
+        let currentFilter = 'all';
+        let searchQuery = '';
+        
+        let userXP = 0;
+
+        // Exam State
+        let examUserAnswers = {};
+        let examTimerInterval = null;
+        let examTimeRemaining = 0;
+        let examSubmitted = false;
+
+        // Flashcards State
+        let currentFcIndex = 0;
+
+        // Bengali Numeral Helper
+        function toBn(num) {
+            if (num === undefined || num === null) return '০';
+            const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return num.toString().split('').map(d => bnDigits[d] || d).join('');
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            updateAllCounts();
+            renderPracticeView();
+            renderFlashcardContent();
+            updateDashboardStats();
+        });
+
+        // Trigger MathJax re-render safely
+        function triggerMathJax() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+            }
+        }
+
+        function updateAllCounts() {
+            const countStr = toBn(questionsData.length);
+            document.querySelectorAll('.q-count-text').forEach(el => el.textContent = countStr);
+        }
+
+        // Theme Toggle Logic
+        function initTheme() {
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            const themeIcon = document.getElementById('theme-toggle-icon');
+
+            themeBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    themeIcon.className = 'fa-solid fa-moon text-base';
+                } else {
+                    document.documentElement.classList.add('dark');
+                    themeIcon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                }
+            });
+        }
+
+        // Tab Switching Logic
+        function switchTab(tab) {
+            ['practice', 'exam', 'flashcards', 'dashboard'].forEach(t => {
+                const content = document.getElementById(`tab-content-${t}`);
+                const btnDesk = document.getElementById(`nav-btn-${t}`);
+                const btnMob = document.getElementById(`mob-nav-${t}`);
+
+                if (t === tab) {
+                    content.classList.remove('hidden');
+                    if (btnDesk) btnDesk.className = "px-3.5 py-1.5 rounded-lg transition bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm flex items-center gap-1.5 font-bold";
+                    if (btnMob) btnMob.className = "py-1.5 px-3 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-0.5 font-bold";
+                } else {
+                    content.classList.add('hidden');
+                    if (btnDesk) btnDesk.className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 dark:text-slate-300 hover:text-emerald-600 flex items-center gap-1.5";
+                    if (btnMob) btnMob.className = "py-1.5 px-3 text-slate-500 dark:text-slate-400 flex flex-col items-center gap-0.5";
+                }
+            });
+            triggerMathJax();
+        }
+
+        // Search Handlers
+        function handleGlobalSearch() {
+            searchQuery = document.getElementById('top-search-input').value.trim().toLowerCase();
+            renderPracticeView();
+        }
+
+        function filterBookmarksOnly() {
+            switchTab('practice');
+            setFilter('bookmarked');
+        }
+
+        // --- PRACTICE MODE FUNCTIONS ---
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            ['all', 'unanswered', 'answered', 'bookmarked'].forEach(f => {
+                const btn = document.getElementById(`btn-filter-${f}`);
+                if (f === filter) {
+                    btn.className = "px-3 py-1.5 rounded-xl font-bold bg-emerald-500 text-white shadow-sm transition";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-xl font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition";
+                }
+            });
+            renderPracticeView();
+        }
+
+        function getFilteredQuestions() {
+            return questionsData.filter(q => {
+                const isAnswered = userAnswers[q.id] !== undefined;
+                const isBookmarked = bookmarks.has(q.id);
+
+                if (currentFilter === 'answered' && !isAnswered) return false;
+                if (currentFilter === 'unanswered' && isAnswered) return false;
+                if (currentFilter === 'bookmarked' && !isBookmarked) return false;
+
+                if (searchQuery) {
+                    const matchQ = q.question.toLowerCase().includes(searchQuery);
+                    const matchA = q.optionA.toLowerCase().includes(searchQuery);
+                    const matchB = q.optionB.toLowerCase().includes(searchQuery);
+                    const matchC = q.optionC.toLowerCase().includes(searchQuery);
+                    const matchD = q.optionD.toLowerCase().includes(searchQuery);
+                    return matchQ || matchA || matchB || matchC || matchD;
+                }
+
+                return true;
+            });
+        }
+
+        function renderPracticeView() {
+            renderPracticeSideGrid();
+            renderPracticeQuestions();
+            updateCounters();
+            triggerMathJax();
+        }
+
+        function renderPracticeSideGrid() {
+            const grid = document.getElementById('practice-side-grid');
+            grid.innerHTML = '';
+
+            if (questionsData.length === 0) {
+                grid.innerHTML = `<span class="col-span-6 text-[10px] text-slate-400 text-center py-2">কোনো প্রশ্ন নেই</span>`;
+                return;
+            }
+
+            questionsData.forEach(q => {
+                const isAnswered = userAnswers[q.id] !== undefined;
+                const isCorrect = isAnswered && userAnswers[q.id] === q.answer;
+
+                let btnClass = "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200";
+                if (isAnswered) {
+                    btnClass = isCorrect ? "bg-emerald-500 text-white font-bold" : "bg-rose-500 text-white font-bold";
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `w-7 h-7 rounded-lg text-[11px] font-bold flex items-center justify-center transition ${btnClass}`;
+                btn.innerText = toBn(q.id);
+                btn.onclick = () => scrollToPracticeQ(q.id);
+                grid.appendChild(btn);
+            });
+        }
+
+        function scrollToPracticeQ(id) {
+            const card = document.getElementById(`practice-q-${id}`);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.classList.add('ring-2', 'ring-emerald-500');
+                setTimeout(() => card.classList.remove('ring-2', 'ring-emerald-500'), 1500);
+            }
+        }
+
+        function renderPracticeQuestions() {
+            const container = document.getElementById('practice-questions-container');
+
+            if (questionsData.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white dark:bg-slate-800 p-8 sm:p-12 rounded-3xl text-center border border-slate-200 dark:border-slate-700 space-y-4 shadow-sm">
+                        <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-file-csv"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">কোনো প্রশ্ন লোড করা হয়নি!</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                                অনুগ্রহ করে ড্যাশবোর্ড ট্যাব অথবা নিচের বোতামে ক্লিক করে আপনার CSV প্রশ্নব্যাংক আপলোড করুন।
+                            </p>
+                        </div>
+                        <button onclick="switchTab('dashboard')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition inline-flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> CSV ফাইল আপলোড করুন
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const filtered = getFilteredQuestions();
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white dark:bg-slate-800 p-12 rounded-3xl text-center border border-slate-200 dark:border-slate-700">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 dark:text-slate-600 mb-2"></i>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">কোনো প্রশ্ন পাওয়া যায়নি</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(q => {
+                const selectedOpt = userAnswers[q.id];
+                const isAnswered = selectedOpt !== undefined;
+                const isBookmarked = bookmarks.has(q.id);
+
+                return `
+                    <div id="practice-q-${q.id}" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition">
+                        
+                        <!-- Header -->
+                        <div class="flex items-start justify-between gap-3 mb-4">
+                            <div class="flex items-start gap-2.5">
+                                <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
+                                    প্রশ্ন ${toBn(q.id)}
+                                </span>
+                                <h3 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-snug">
+                                    ${q.question}
+                                </h3>
+                            </div>
+                            <button onclick="toggleBookmark(${q.id})" class="text-slate-400 hover:text-amber-500 transition p-1" title="বুকমার্ক">
+                                <i class="${isBookmarked ? 'fa-solid text-amber-500' : 'fa-regular'} fa-bookmark text-base"></i>
+                            </button>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
+                            ${['A', 'B', 'C', 'D'].map(optKey => {
+                                const optText = q[`option${optKey}`];
+                                const bnLabel = { 'A': 'ক', 'B': 'খ', 'C': 'গ', 'D': 'ঘ' }[optKey];
+
+                                let optStyle = "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200";
+                                let badgeStyle = "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
+
+                                if (isAnswered) {
+                                    if (optKey === q.answer) {
+                                        optStyle = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold";
+                                        badgeStyle = "bg-emerald-500 text-white";
+                                    } else if (selectedOpt === optKey) {
+                                        optStyle = "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-semibold";
+                                        badgeStyle = "bg-rose-500 text-white";
+                                    } else {
+                                        optStyle = "border-slate-200 dark:border-slate-700 opacity-50 text-slate-400";
+                                    }
+                                }
+
+                                return `
+                                    <button onclick="answerPractice(${q.id}, '${optKey}')"
+                                            ${isAnswered ? 'disabled' : ''}
+                                            class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-center gap-3 transition ${optStyle}">
+                                        <span class="w-6 h-6 rounded-lg text-xs flex items-center justify-center font-bold shrink-0 ${badgeStyle}">
+                                            ${bnLabel}
+                                        </span>
+                                        <span class="flex-1">${optText}</span>
+                                        ${isAnswered && optKey === q.answer ? '<i class="fa-solid fa-circle-check text-emerald-600"></i>' : ''}
+                                        ${isAnswered && selectedOpt === optKey && selectedOpt !== q.answer ? '<i class="fa-solid fa-circle-xmark text-rose-600"></i>' : ''}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <!-- Explanation Accordion -->
+                        ${isAnswered ? `
+                            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl space-y-1">
+                                <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                                    <i class="fa-solid fa-lightbulb"></i> সমাধান / ব্যাখ্যা:
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                    ${q.explanation || 'কোনো ব্যাখ্যা দেওয়া নেই।'}
+                                </p>
+                            </div>
+                        ` : ''}
+
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function answerPractice(qId, optKey) {
+            userAnswers[qId] = optKey;
+            
+            // Add XP if correct
+            const q = questionsData.find(item => item.id === qId);
+            if (q && q.answer === optKey) {
+                userXP += 10;
+                document.getElementById('user-xp-display').innerText = toBn(userXP);
+            }
+
+            renderPracticeView();
+            updateDashboardStats();
+        }
+
+        function toggleBookmark(qId) {
+            if (bookmarks.has(qId)) bookmarks.delete(qId);
+            else bookmarks.add(qId);
+
+            document.getElementById('nav-bookmark-badge').innerText = toBn(bookmarks.size);
+            renderPracticeView();
+            updateDashboardStats();
+        }
+
+        function resetPracticeProgress() {
+            if (confirm("আপনি কি অনুশীলনের উত্তরগুলো মুছে পুনরায় শুরু করতে চান?")) {
+                userAnswers = {};
+                renderPracticeView();
+                updateDashboardStats();
+            }
+        }
+
+        function updateCounters() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const unansweredCount = questionsData.length - answeredCount;
+
+            document.getElementById('cnt-all').innerText = toBn(questionsData.length);
+            document.getElementById('cnt-answered').innerText = toBn(answeredCount);
+            document.getElementById('cnt-unanswered').innerText = toBn(unansweredCount);
+            document.getElementById('cnt-bookmarked').innerText = toBn(bookmarks.size);
+
+            // Calculate accuracy
+            let correct = 0;
+            Object.keys(userAnswers).forEach(qId => {
+                const q = questionsData.find(item => item.id == qId);
+                if (q && userAnswers[qId] === q.answer) correct++;
+            });
+
+            const accuracy = answeredCount > 0 ? Math.round((correct / answeredCount) * 100) : 0;
+            document.getElementById('side-accuracy-text').innerText = `সঠিক: ${toBn(accuracy)}%`;
+
+            // Hero progress
+            const pct = questionsData.length > 0 ? Math.round((answeredCount / questionsData.length) * 100) : 0;
+            document.getElementById('hero-progress-text').innerText = `${toBn(pct)}% সম্পন্ন`;
+            document.getElementById('hero-progress-bar').style.width = `${pct}%`;
+        }
+
+        // --- LIVE MODEL TEST EXAM FUNCTIONS ---
+
+        function startLiveExam() {
+            if (!questionsData || questionsData.length === 0) {
+                alert("পরীক্ষা শুরু করার জন্য আগে ড্যাশবোর্ড থেকে একটি CSV প্রশ্নব্যাংক আপলোড করুন।");
+                switchTab('dashboard');
+                return;
+            }
+            examUserAnswers = {};
+            examSubmitted = false;
+
+            document.getElementById('exam-intro-card').classList.add('hidden');
+            document.getElementById('exam-active-container').classList.remove('hidden');
+            document.getElementById('exam-result-container').classList.add('hidden');
+
+            renderExamQuestions();
+            renderExamSideGrid();
+
+            // Start timer
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            examTimerInterval = setInterval(() => {
+                examTimeRemaining--;
+                updateExamTimerDisplay();
+                if (examTimeRemaining <= 0) {
+                    clearInterval(examTimerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function updateExamTimerDisplay() {
+            const mins = Math.floor(examTimeRemaining / 60);
+            const secs = examTimeRemaining % 60;
+            const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('exam-timer-text').innerText = formatted;
+        }
+
+        function renderExamQuestions() {
+            const container = document.getElementById('exam-questions-list');
+            container.innerHTML = questionsData.map(q => {
+                const selectedOpt = examUserAnswers[q.id];
+
+                return `
+                    <div id="exam-q-${q.id}" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-start gap-2.5 mb-4">
+                            <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
+                                ${toBn(q.id)}
+                            </span>
+                            <h3 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-snug">
+                                ${q.question}
+                            </h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            ${['A', 'B', 'C', 'D'].map(optKey => {
+                                const optText = q[`option${optKey}`];
+                                const isSelected = selectedOpt === optKey;
+                                const bnLabel = { 'A': 'ক', 'B': 'খ', 'C': 'গ', 'D': 'ঘ' }[optKey];
+
+                                const optStyle = isSelected
+                                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-bold"
+                                    : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200";
+
+                                const badgeStyle = isSelected ? "bg-emerald-500 text-white" : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
+
+                                return `
+                                    <button onclick="selectExamOpt(${q.id}, '${optKey}')"
+                                            class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-center gap-3 transition ${optStyle}">
+                                        <span class="w-6 h-6 rounded-lg text-xs flex items-center justify-center font-bold shrink-0 ${badgeStyle}">
+                                            ${bnLabel}
+                                        </span>
+                                        <span class="flex-1">${optText}</span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            triggerMathJax();
+        }
+
+        function selectExamOpt(qId, optKey) {
+            examUserAnswers[qId] = optKey;
+            renderExamQuestions();
+            renderExamSideGrid();
+            document.getElementById('exam-answered-counter').innerText = `${toBn(Object.keys(examUserAnswers).length)} / ${toBn(questionsData.length)}`;
+        }
+
+        function renderExamSideGrid() {
+            const grid = document.getElementById('exam-side-grid');
+            grid.innerHTML = '';
+
+            questionsData.forEach(q => {
+                const isAnswered = examUserAnswers[q.id] !== undefined;
+
+                const btn = document.createElement('button');
+                btn.className = `w-7 h-7 rounded-lg text-[11px] font-bold flex items-center justify-center transition ${
+                    isAnswered ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                }`;
+                btn.innerText = toBn(q.id);
+                btn.onclick = () => {
+                    const el = document.getElementById(`exam-q-${q.id}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function submitExamWithConfirmation() {
+            const answered = Object.keys(examUserAnswers).length;
+            if (confirm(`আপনি কি পরীক্ষা জমা দিতে চান? আপনি ${toBn(questionsData.length)}টি প্রশ্নের মধ্যে ${toBn(answered)}টির উত্তর দিয়েছেন।`)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            examSubmitted = true;
+
+            document.getElementById('exam-active-container').classList.add('hidden');
+            document.getElementById('exam-result-container').classList.remove('hidden');
+
+            // Calculate Score
+            let correct = 0;
+            let wrong = 0;
+
+            questionsData.forEach(q => {
+                const ans = examUserAnswers[q.id];
+                if (ans === q.answer) correct++;
+                else if (ans !== undefined) wrong++;
+            });
+
+            const totalAns = Object.keys(examUserAnswers).length;
+            const accuracy = totalAns > 0 ? Math.round((correct / totalAns) * 100) : 0;
+
+            document.getElementById('res-score-text').innerHTML = `${toBn(correct)} / <span class="q-count-text">${toBn(questionsData.length)}</span>`;
+            document.getElementById('res-correct-text').innerText = toBn(correct);
+            document.getElementById('res-wrong-text').innerText = toBn(wrong);
+            document.getElementById('res-accuracy-text').innerText = `${toBn(accuracy)}%`;
+
+            renderExamReview();
+        }
+
+        function renderExamReview() {
+            const container = document.getElementById('exam-review-container');
+            container.innerHTML = questionsData.map(q => {
+                const userAns = examUserAnswers[q.id];
+                const isCorrect = userAns === q.answer;
+                const isSkipped = userAns === undefined;
+
+                return `
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex items-start gap-2">
+                                <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0">
+                                    প্রশ্ন ${toBn(q.id)}
+                                </span>
+                                <h4 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base">
+                                    ${q.question}
+                                </h4>
+                            </div>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full shrink-0 ${
+                                isCorrect ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' :
+                                isSkipped ? 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300' :
+                                'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                            }">
+                                ${isCorrect ? 'সঠিক' : isSkipped ? 'উত্তর দেয়া হয়নি' : 'ভুল'}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            ${['A', 'B', 'C', 'D'].map(optKey => {
+                                const optText = q[`option${optKey}`];
+                                const bnLabel = { 'A': 'ক', 'B': 'খ', 'C': 'গ', 'D': 'ঘ' }[optKey];
+
+                                let optStyle = "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400";
+                                if (optKey === q.answer) {
+                                    optStyle = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-bold";
+                                } else if (userAns === optKey) {
+                                    optStyle = "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold";
+                                }
+
+                                return `
+                                    <div class="p-2.5 rounded-xl border flex items-center gap-2 ${optStyle}">
+                                        <span class="w-5 h-5 rounded-md text-[10px] flex items-center justify-center font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 shrink-0">
+                                            ${bnLabel}
+                                        </span>
+                                        <span class="flex-1">${optText}</span>
+                                        ${optKey === q.answer ? '<i class="fa-solid fa-check text-emerald-600"></i>' : ''}
+                                        ${userAns === optKey && userAns !== q.answer ? '<i class="fa-solid fa-xmark text-rose-600"></i>' : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <div class="pt-2 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/40 p-3 rounded-xl">
+                            <strong class="text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-lightbulb"></i> ব্যাখ্যা:</strong> ${q.explanation || 'কোনো ব্যাখ্যা দেওয়া নেই।'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            triggerMathJax();
+        }
+
+        function scrollToReviewAnswers() {
+            document.getElementById('exam-review-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetExamToStart() {
+            document.getElementById('exam-result-container').classList.add('hidden');
+            document.getElementById('exam-intro-card').classList.remove('hidden');
+        }
+
+        // --- FLASHCARDS FUNCTIONS ---
+
+        function flipFlashcard(cardEl) {
+            cardEl.classList.toggle('flipped');
+        }
+
+        function renderFlashcardContent() {
+            if (!questionsData || questionsData.length === 0) {
+                document.getElementById('fc-number').innerText = toBn(0);
+                document.getElementById('fc-question').innerText = "কোনো প্রশ্ন নেই। ড্যাশবোর্ড থেকে CSV ফাইল আপলোড করুন।";
+                document.getElementById('fc-answer').innerText = "সঠিক উত্তর: -";
+                document.getElementById('fc-explanation').innerText = "-";
+                return;
+            }
+
+            const q = questionsData[currentFcIndex];
+            document.getElementById('fc-number').innerText = toBn(currentFcIndex + 1);
+            
+            document.getElementById('fc-question').innerText = `${toBn(q.id)}. ${q.question}`;
+
+            const bnLabel = { 'A': 'ক', 'B': 'খ', 'C': 'গ', 'D': 'ঘ' }[q.answer] || q.answer;
+            const optText = q[`option${q.answer}`] || '';
+            document.getElementById('fc-answer').innerText = `সঠিক উত্তর: (${bnLabel}) ${optText}`;
+            document.getElementById('fc-explanation').innerText = q.explanation || 'কোনো ব্যাখ্যা নেই।';
+
+            // Reset flip
+            const fcInner = document.getElementById('flashcard-inner');
+            if (fcInner) fcInner.parentElement.classList.remove('flipped');
+            triggerMathJax();
+        }
+
+        function nextFlashcard() {
+            if (!questionsData.length) return;
+            if (currentFcIndex < questionsData.length - 1) currentFcIndex++;
+            else currentFcIndex = 0;
+            renderFlashcardContent();
+        }
+
+        function prevFlashcard() {
+            if (!questionsData.length) return;
+            if (currentFcIndex > 0) currentFcIndex--;
+            else currentFcIndex = questionsData.length - 1;
+            renderFlashcardContent();
+        }
+
+        // --- DASHBOARD CSV IMPORT ---
+        function parseCSVText(text) {
+            text = String(text ?? '').replace(/^\uFEFF/, '');
+            const rows = [];
+            let row = [], field = '', quoted = false;
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i], next = text[i + 1];
+                if (ch === '"') {
+                    if (quoted && next === '"') { field += '"'; i++; }
+                    else if (quoted) quoted = false;
+                    else if (field.length === 0) quoted = true;
+                    else field += ch;
+                } else if (ch === ',' && !quoted) {
+                    row.push(field); field = '';
+                } else if ((ch === '\n' || ch === '\r') && !quoted) {
+                    if (ch === '\r' && next === '\n') i++;
+                    row.push(field); field = '';
+                    if (row.some(v => String(v).trim() !== '')) rows.push(row);
+                    row = [];
+                } else field += ch;
+            }
+            if (quoted) throw new Error('CSV-তে একটি উদ্ধৃতিচিহ্ন বন্ধ হয়নি।');
+            row.push(field);
+            if (row.some(v => String(v).trim() !== '')) rows.push(row);
+            return rows;
+        }
+
+        function uploadQuestionsCSV() {
+            const input = document.getElementById('csv-upload-input');
+            const status = document.getElementById('csv-upload-status');
+            const file = input && input.files && input.files[0];
+            
+            const showStatus = (message, success = false) => {
+                status.innerHTML = message;
+                status.className = 'text-xs mt-3 ' + (success
+                    ? 'text-emerald-600 dark:text-emerald-400 font-semibold'
+                    : 'text-rose-600 dark:text-rose-400 font-semibold');
+            };
+
+            if (!file) { showStatus('<i class="fa-solid fa-triangle-exclamation mr-1"></i> আগে একটি CSV ফাইল নির্বাচন করুন।'); return; }
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                try {
+                    const rows = parseCSVText(reader.result || '');
+                    if (rows.length < 2) throw new Error('CSV ফাইলে হেডার ও অন্তত একটি প্রশ্ন থাকতে হবে।');
+                    
+                    const normalize = h => String(h ?? '').replace(/^\uFEFF/, '').trim().replace(/^#/, '')
+                        .toLowerCase().replace(/[\s_-]+/g, '').replace(/[()]/g, '');
+                    
+                    const aliases = {
+                        question: ['question','questions','প্রশ্ন','প্রশ্নবিবরণ','প্রশ্নেরবিবরণ'],
+                        optionA: ['optiona','option1','a','ক','অপশনক','কঅপশন','বিকল্পক'],
+                        optionB: ['optionb','option2','b','খ','অপশনখ','খঅপশন','বিকল্পখ'],
+                        optionC: ['optionc','option3','c','গ','অপশনগ','গঅপশন','বিকল্পগ'],
+                        optionD: ['optiond','option4','d','ঘ','অপশনঘ','ঘঅপশন','বিকল্পঘ'],
+                        answer: ['answer','correctanswer','correctoption','সঠিকউত্তর','উত্তর'],
+                        explanation: ['explanation','ব্যাখ্যা','সমাধান']
+                    };
+                    
+                    let headerIndex = -1, col = {};
+                    const metadata = {};
+
+                    for (let ri = 0; ri < rows.length; ri++) {
+                        const r = rows[ri];
+                        const firstCell = String(r[0] || '').trim().toLowerCase();
+                        
+                        // Extract optional metadata lines like #title, #subtitle
+                        if (firstCell.startsWith('#')) {
+                            const metaKey = firstCell.replace(/^#/, '');
+                            if (r.length > 1) metadata[metaKey] = r.slice(1).join(',').trim();
+                            continue;
+                        }
+
+                        const candidate = r.map(normalize), found = {};
+                        Object.keys(aliases).forEach(key => found[key] = candidate.findIndex(h => aliases[key].includes(h)));
+                        if (found.question >= 0 && ['optionA','optionB','optionC','optionD','answer'].every(k => found[k] >= 0)) {
+                            headerIndex = ri; col = found; break;
+                        }
+                    }
+
+                    if (headerIndex < 0) throw new Error('প্রশ্নের হেডার পাওয়া যায়নি। question, optionA, optionB, optionC, optionD, answer কলাম অবশ্যই রাখুন।');
+
+                    const imported = [];
+                    for (let ri = headerIndex + 1; ri < rows.length; ri++) {
+                        const r = rows[ri];
+                        if (!r.some(v => String(v ?? '').trim())) continue;
+                        if (String(r[0] || '').trim().startsWith('#')) continue;
+                        
+                        const get = key => col[key] >= 0 ? String(r[col[key]] ?? '').trim() : '';
+                        const originalAnswer = get('answer');
+                        let answer = originalAnswer.toUpperCase().trim();
+                        
+                        const answerMap = {'ক':'A','খ':'B','গ':'C','ঘ':'D','১':'A','২':'B','৩':'C','৪':'D'};
+                        if (answerMap[answer]) answer = answerMap[answer];
+                        else {
+                            const match = answer.match(/^\s*\(?\s*([A-D])\s*\)?(?:\s|$|[.)।:-])/i);
+                            answer = match ? match[1].toUpperCase() : answer;
+                        }
+
+                        const q = {
+                            id: imported.length + 1,
+                            question: get('question'), 
+                            optionA: get('optionA'), 
+                            optionB: get('optionB'),
+                            optionC: get('optionC'), 
+                            optionD: get('optionD'), 
+                            answer,
+                            explanation: get('explanation')
+                        };
+
+                        if (!q.question || !q.optionA || !q.optionB || !q.optionC || !q.optionD || !['A','B','C','D'].includes(q.answer)) {
+                            throw new Error(`CSV-এর সারি ${ri + 1} অসম্পূর্ণ অথবা সঠিক উত্তর (A/B/C/D বা ক/খ/গ/ঘ) নয়।`);
+                        }
+                        imported.push(q);
+                    }
+
+                    if (!imported.length) throw new Error('হেডারের পরে কোনো বৈধ প্রশ্ন পাওয়া যায়নি।');
+
+                    // Dynamically Update Hero & Title Content if provided or inferred
+                    if (metadata.title) {
+                        document.getElementById('hero-main-title').textContent = metadata.title;
+                        document.getElementById('page-title').textContent = metadata.title + " | Biohaters Academy";
+                    } else if (file.name) {
+                        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+                        document.getElementById('hero-main-title').textContent = cleanName;
+                    }
+
+                    if (metadata.badge) {
+                        document.getElementById('header-subject-tag').textContent = metadata.badge;
+                    }
+
+                    if (metadata.subtitle || metadata.description) {
+                        const descText = metadata.subtitle || metadata.description;
+                        document.getElementById('hero-description').textContent = descText;
+                        document.getElementById('header-chapter-subtitle').innerHTML = `${descText.substring(0, 45)}... (<span class="q-count-text">${toBn(imported.length)}</span>টি MCQ)`;
+                    } else {
+                        document.getElementById('hero-description').textContent = `আপলোড করা CSV ফাইল থেকে মোট ${toBn(imported.length)}টি প্রশ্ন রেন্ডার করা হয়েছে।`;
+                        document.getElementById('header-chapter-subtitle').innerHTML = `প্রশ্নব্যাংক (<span class="q-count-text">${toBn(imported.length)}</span>টি MCQ)`;
+                    }
+
+                    // Update Global State
+                    questionsData = imported;
+                    userAnswers = {};
+                    examUserAnswers = {};
+                    examSubmitted = false;
+                    bookmarks.clear();
+                    currentFcIndex = 0;
+                    currentFilter = 'all';
+                    searchQuery = '';
+
+                    // Recalculate Exam Time dynamically (or from metadata)
+                    const calculatedMinutes = metadata.duration ? Number(metadata.duration) : Math.min(60, Math.max(10, imported.length));
+                    examTimeRemaining = calculatedMinutes * 60;
+                    
+                    const timeMinutesEl = document.getElementById('hero-exam-minutes');
+                    if (timeMinutesEl) timeMinutesEl.innerText = toBn(calculatedMinutes);
+                    const introTimeEl = document.getElementById('exam-intro-time');
+                    if (introTimeEl) introTimeEl.innerText = toBn(calculatedMinutes);
+
+                    updateAllCounts();
+                    renderPracticeView();
+                    renderFlashcardContent();
+                    updateDashboardStats();
+
+                    showStatus(`<i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> সফলভাবে ${toBn(imported.length)}টি প্রশ্ন ও ইকুয়েশন আপলোড করা হয়েছে!`, true);
+                    input.value = '';
+                } catch (err) {
+                    showStatus(`<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> আপলোড করা যায়নি: ${err.message || 'CSV ফরম্যাট সঠিক নয়'}`);
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function downloadCSVTemplate() {
+            const csv = '#title,পরিমাণগত রসায়ন — MCQ\r\n#badge,পরিমাণগত রসায়ন\r\n#subtitle,মোল ও গ্যাসের আয়তন · দ্রবণের ঘনমাত্রা · pH · জারণ-বিজারণ · টাইট্রেশন\r\n#duration,60\r\nquestion,optionA,optionB,optionC,optionD,answer,explanation\r\n"STP-তে 22.4 L অক্সিজেন প্রস্তুত করতে কত গ্রাম পটাসিয়াম ক্লোরেট প্রয়োজন?","$56.23\\text{ g}$","$57.16\\text{ g}$","$60.16\\text{ g}$","$81.73\\text{ g}$","D","সঠিক উত্তর D: $81.73\\text{ g}$।"';
+            const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8;'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'dynamic-question-template.csv';
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        // --- DASHBOARD FUNCTIONS ---
+
+        function updateDashboardStats() {
+            const answeredCnt = Object.keys(userAnswers).length;
+            document.getElementById('dash-answered-cnt').innerHTML = `${toBn(answeredCnt)} / <span class="q-count-text">${toBn(questionsData.length)}</span>`;
+            document.getElementById('dash-bookmark-cnt').innerText = toBn(bookmarks.size);
+            document.getElementById('dash-xp-cnt').innerText = `${toBn(userXP)} XP`;
+
+            let correct = 0;
+            Object.keys(userAnswers).forEach(qId => {
+                const q = questionsData.find(item => item.id == qId);
+                if (q && userAnswers[qId] === q.answer) correct++;
+            });
+
+            const accuracy = answeredCnt > 0 ? Math.round((correct / answeredCnt) * 100) : 0;
+            document.getElementById('dash-accuracy-text').innerText = `${toBn(accuracy)}%`;
+        }
+    </script>
+</body>
+</html>
