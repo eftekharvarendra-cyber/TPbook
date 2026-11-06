@@ -37,17 +37,20 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- MathJax CDN for Equation Rendering -->
+    <!-- Fast & Optimized MathJax CDN for On-Demand Equation Rendering -->
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
                 displayMath: [['$$', '$$'], ['\\[', '\\]']]
             },
-            svg: { fontCache: 'global' }
+            svg: { fontCache: 'global' },
+            startup: {
+                typeset: false // একসাথে পুরো পেজ রেন্ডার করা বন্ধ রাখবে
+            }
         };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
 
     <style>
         body {
@@ -623,10 +626,14 @@
             updateDashboardStats();
         });
 
-        // Trigger MathJax re-render safely
-        function triggerMathJax() {
+        // Trigger MathJax re-render safely for specific containers or global
+        function triggerMathJax(target = null) {
             if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+                if (target) {
+                    window.MathJax.typesetPromise([target]).catch((err) => console.log('MathJax error:', err));
+                } else {
+                    window.MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+                }
             }
         }
 
@@ -668,7 +675,10 @@
                     if (btnMob) btnMob.className = "py-1.5 px-3 text-slate-500 dark:text-slate-400 flex flex-col items-center gap-0.5";
                 }
             });
-            triggerMathJax();
+
+            // Target tab element for localized fast rendering
+            const currentTabEl = document.getElementById(`tab-content-${tab}`);
+            triggerMathJax(currentTabEl);
         }
 
         // Search Handlers
@@ -723,7 +733,9 @@
             renderPracticeSideGrid();
             renderPracticeQuestions();
             updateCounters();
-            triggerMathJax();
+            
+            const practiceContainer = document.getElementById('practice-questions-container');
+            triggerMathJax(practiceContainer);
         }
 
         function renderPracticeSideGrid() {
@@ -884,6 +896,10 @@
 
             renderPracticeView();
             updateDashboardStats();
+
+            // Render math for the specifically updated question element
+            const singleCard = document.getElementById(`practice-q-${qId}`);
+            triggerMathJax(singleCard);
         }
 
         function toggleBookmark(qId) {
@@ -1007,7 +1023,8 @@
                     </div>
                 `;
             }).join('');
-            triggerMathJax();
+            
+            triggerMathJax(container);
         }
 
         function selectExamOpt(qId, optKey) {
@@ -1130,7 +1147,8 @@
                     </div>
                 `;
             }).join('');
-            triggerMathJax();
+            
+            triggerMathJax(container);
         }
 
         function scrollToReviewAnswers() {
@@ -1170,7 +1188,9 @@
             // Reset flip
             const fcInner = document.getElementById('flashcard-inner');
             if (fcInner) fcInner.parentElement.classList.remove('flipped');
-            triggerMathJax();
+
+            const fcContainer = document.getElementById('tab-content-flashcards');
+            triggerMathJax(fcContainer);
         }
 
         function nextFlashcard() {
