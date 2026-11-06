@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">MCQ Web App | Biohaters Academy</title>
+    <title id="page-title">MCQ Web App | Team Pharmastic</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -46,7 +46,7 @@
             },
             svg: { fontCache: 'global' },
             startup: {
-                typeset: false // একসাথে পুরো পেজ রেন্ডার করা বন্ধ রাখবে
+                typeset: false
             }
         };
     </script>
@@ -100,11 +100,11 @@
                 <!-- Logo & Title -->
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-emerald-500/20 shrink-0">
-                        <i class="fa-solid fa-flask"></i>
+                    <img src="https://www.teampharmastic.com/images/logo.png" alt="Team Pharmastic Logo">
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <h1 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg leading-tight" id="header-brand-title">Biohaters Academy</h1>
+                            <h1 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg leading-tight" id="header-brand-title">Team Pharmastic</h1>
                             <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800" id="header-subject-tag">MCQ Portal</span>
                         </div>
                         <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block" id="header-chapter-subtitle">CSV ফাইল লোড করুন (<span class="q-count-text">০</span>টি MCQ)</p>
@@ -263,8 +263,23 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
                 
                 <!-- Questions List Container (Left 3 cols) -->
-                <div class="lg:col-span-3 space-y-4" id="practice-questions-container">
-                    <!-- Dynamic Question Cards Rendered Here -->
+                <div class="lg:col-span-3 space-y-4">
+                    <div id="practice-questions-container" class="space-y-4">
+                        <!-- Dynamic Question Cards Rendered Here -->
+                    </div>
+
+                    <!-- Practice Pagination Controls -->
+                    <div id="practice-pagination" class="flex items-center justify-between bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm text-xs font-semibold">
+                        <button id="btn-prev-page" onclick="changePracticePage(practiceCurrentPage - 1)" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 dark:hover:bg-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-chevron-left mr-1"></i> আগের পেজ
+                        </button>
+                        <span id="practice-page-info" class="text-slate-600 dark:text-slate-300">
+                            পেজ <span id="current-page-bn">১</span> / <span id="total-pages-bn">১</span>
+                        </span>
+                        <button id="btn-next-page" onclick="changePracticePage(practiceCurrentPage + 1)" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-emerald-50 hover:text-emerald-600 dark:hover:bg-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            পরের পেজ <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Side Quick-Jump OMR Palette (Right 1 col) -->
@@ -303,13 +318,14 @@
                 <div>
                     <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">অনলাইন মডেল টেস্টে আপনাকে স্বাগতম!</h3>
                     <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        এই মডেল টেস্টে সর্বমোট <strong class="text-emerald-600"><span class="q-count-text">০</span> টি প্রশ্ন</strong> রয়েছে। সময় বরাদ্দ <strong class="text-emerald-600"><span id="exam-intro-time">০</span> মিনিট</strong>। সাবমিট করার পর আপনার বিস্তারিত স্কোর কার্ড এবং নির্ভুল বিশ্লেষণ প্রদর্শন করা হবে।
+                        এই মডেল টেস্টে র্যান্ডমলি বাছাইকৃত <strong class="text-emerald-600"><span id="exam-q-count">৫০</span> টি প্রশ্ন</strong> থাকবে। সময় বরাদ্দ <strong class="text-emerald-600"><span id="exam-intro-time">৫০</span> মিনিট</strong>। সাবমিট করার পর আপনার বিস্তারিত স্কোর কার্ড এবং নির্ভুল বিশ্লেষণ প্রদর্শন করা হবে।
                     </p>
                 </div>
 
                 <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 p-4 rounded-2xl text-left text-xs text-amber-800 dark:text-amber-200 space-y-1">
                     <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> নির্দেশনা:</p>
                     <ul class="list-disc list-inside space-y-1">
+                        <li>প্রতিটি পরীক্ষার জন্য পুরো ব্যাংক থেকে ৫০টি র্যান্ডম প্রশ্ন নির্বাচিত হয়।</li>
                         <li>প্রতিটি সঠিক উত্তরের জন্য ১ নম্বর পাবেন।</li>
                         <li>কোনো নেগেটিভ মার্কিং নেই।</li>
                         <li>সময় শেষ হয়ে গেলে পরীক্ষা স্বয়ংক্রিয়ভাবে জমা হয়ে যাবে।</li>
@@ -332,7 +348,7 @@
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                         </div>
                         <div>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">লাইভ মডেল টেস্ট</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">লাইভ মডেল টেস্ট (৫০ প্রশ্ন)</p>
                             <h4 class="text-sm font-bold text-slate-100" id="exam-live-chapter-title">অনলাইন পরীক্ষা</h4>
                         </div>
                     </div>
@@ -361,7 +377,7 @@
                     <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm sticky top-40">
                         <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100 dark:border-slate-700">
                             <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">OMR শিট নেভিগেটর</h3>
-                            <span class="text-xs font-bold text-slate-600 dark:text-slate-300" id="exam-answered-counter">০ / <span class="q-count-text">০</span></span>
+                            <span class="text-xs font-bold text-slate-600 dark:text-slate-300" id="exam-answered-counter">০ / ৫০</span>
                         </div>
 
                         <div class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-6 gap-1.5 max-h-[380px] overflow-y-auto p-1" id="exam-side-grid">
@@ -395,7 +411,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-600">
                             <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">মোট স্কোর</p>
-                            <p class="text-2xl font-black text-emerald-600 dark:text-emerald-400" id="res-score-text">০ / <span class="q-count-text">০</span></p>
+                            <p class="text-2xl font-black text-emerald-600 dark:text-emerald-400" id="res-score-text">০ / ৫০</p>
                         </div>
                         <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-600">
                             <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">সঠিক উত্তর</p>
@@ -583,7 +599,7 @@
     <!-- Footer Section -->
     <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 mt-12 py-6">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
-            <p class="font-bold text-slate-700 dark:text-slate-300">Biohaters Chemistry Academy &copy; 2026</p>
+            <p class="font-bold text-slate-700 dark:text-slate-300">Team Pharmastic &copy; 2026</p>
             <p id="footer-subtitle">MCQ Interactive Learning Portal</p>
         </div>
     </footer>
@@ -601,7 +617,12 @@
         
         let userXP = 0;
 
+        // Practice Pagination State
+        const practiceItemsPerPage = 10;
+        let practiceCurrentPage = 1;
+
         // Exam State
+        let examQuestionsData = [];
         let examUserAnswers = {};
         let examTimerInterval = null;
         let examTimeRemaining = 0;
@@ -684,6 +705,7 @@
         // Search Handlers
         function handleGlobalSearch() {
             searchQuery = document.getElementById('top-search-input').value.trim().toLowerCase();
+            practiceCurrentPage = 1;
             renderPracticeView();
         }
 
@@ -696,6 +718,7 @@
 
         function setFilter(filter) {
             currentFilter = filter;
+            practiceCurrentPage = 1;
             ['all', 'unanswered', 'answered', 'bookmarked'].forEach(f => {
                 const btn = document.getElementById(`btn-filter-${f}`);
                 if (f === filter) {
@@ -729,6 +752,16 @@
             });
         }
 
+        function changePracticePage(newPage) {
+            const filtered = getFilteredQuestions();
+            const totalPages = Math.ceil(filtered.length / practiceItemsPerPage) || 1;
+            if (newPage >= 1 && newPage <= totalPages) {
+                practiceCurrentPage = newPage;
+                renderPracticeView();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
         function renderPracticeView() {
             renderPracticeSideGrid();
             renderPracticeQuestions();
@@ -757,6 +790,7 @@
                 }
 
                 const btn = document.createElement('button');
+                btn.id = `side-btn-${q.id}`;
                 btn.className = `w-7 h-7 rounded-lg text-[11px] font-bold flex items-center justify-center transition ${btnClass}`;
                 btn.innerText = toBn(q.id);
                 btn.onclick = () => scrollToPracticeQ(q.id);
@@ -765,16 +799,105 @@
         }
 
         function scrollToPracticeQ(id) {
-            const card = document.getElementById(`practice-q-${id}`);
-            if (card) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                card.classList.add('ring-2', 'ring-emerald-500');
-                setTimeout(() => card.classList.remove('ring-2', 'ring-emerald-500'), 1500);
+            const filtered = getFilteredQuestions();
+            const qIndex = filtered.findIndex(q => q.id === id);
+            
+            if (qIndex !== -1) {
+                const targetPage = Math.floor(qIndex / practiceItemsPerPage) + 1;
+                if (targetPage !== practiceCurrentPage) {
+                    practiceCurrentPage = targetPage;
+                    renderPracticeView();
+                }
             }
+
+            setTimeout(() => {
+                const card = document.getElementById(`practice-q-${id}`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.classList.add('ring-2', 'ring-emerald-500');
+                    setTimeout(() => card.classList.remove('ring-2', 'ring-emerald-500'), 1500);
+                }
+            }, 100);
+        }
+
+        function generateSingleQuestionCardHTML(q) {
+            const selectedOpt = userAnswers[q.id];
+            const isAnswered = selectedOpt !== undefined;
+            const isBookmarked = bookmarks.has(q.id);
+
+            return `
+                <div id="practice-q-${q.id}" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition">
+                    
+                    <!-- Header -->
+                    <div class="flex items-start justify-between gap-3 mb-4">
+                        <div class="flex items-start gap-2.5">
+                            <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
+                                প্রশ্ন ${toBn(q.id)}
+                            </span>
+                            <h3 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-snug">
+                                ${q.question}
+                            </h3>
+                        </div>
+                        <button onclick="toggleBookmark(${q.id})" class="text-slate-400 hover:text-amber-500 transition p-1" title="বুকমার্ক">
+                            <i class="${isBookmarked ? 'fa-solid text-amber-500' : 'fa-regular'} fa-bookmark text-base"></i>
+                        </button>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
+                        ${['A', 'B', 'C', 'D'].map(optKey => {
+                            const optText = q[`option${optKey}`];
+                            const bnLabel = { 'A': 'ক', 'B': 'খ', 'C': 'গ', 'D': 'ঘ' }[optKey];
+
+                            let optStyle = "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200";
+                            let badgeStyle = "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
+
+                            if (isAnswered) {
+                                if (optKey === q.answer) {
+                                    optStyle = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold";
+                                    badgeStyle = "bg-emerald-500 text-white";
+                                } else if (selectedOpt === optKey) {
+                                    optStyle = "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-semibold";
+                                    badgeStyle = "bg-rose-500 text-white";
+                                } else {
+                                    optStyle = "border-slate-200 dark:border-slate-700 opacity-50 text-slate-400";
+                                }
+                            }
+
+                            return `
+                                <button onclick="answerPractice(${q.id}, '${optKey}')"
+                                        ${isAnswered ? 'disabled' : ''}
+                                        class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-center gap-3 transition ${optStyle}">
+                                    <span class="w-6 h-6 rounded-lg text-xs flex items-center justify-center font-bold shrink-0 ${badgeStyle}">
+                                        ${bnLabel}
+                                    </span>
+                                    <span class="flex-1">${optText}</span>
+                                    ${isAnswered && optKey === q.answer ? '<i class="fa-solid fa-circle-check text-emerald-600"></i>' : ''}
+                                    ${isAnswered && selectedOpt === optKey && selectedOpt !== q.answer ? '<i class="fa-solid fa-circle-xmark text-rose-600"></i>' : ''}
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- Explanation Accordion -->
+                    ${isAnswered ? `
+                        <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl space-y-1">
+                            <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                                <i class="fa-solid fa-lightbulb"></i> সমাধান / ব্যাখ্যা:
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                ${q.explanation || 'কোনো ব্যাখ্যা দেওয়া নেই।'}
+                            </p>
+                        </div>
+                    ` : ''}
+
+                </div>
+            `;
         }
 
         function renderPracticeQuestions() {
             const container = document.getElementById('practice-questions-container');
+            const paginationEl = document.getElementById('practice-pagination');
 
             if (questionsData.length === 0) {
                 container.innerHTML = `
@@ -793,6 +916,7 @@
                         </button>
                     </div>
                 `;
+                paginationEl.classList.add('hidden');
                 return;
             }
 
@@ -805,85 +929,26 @@
                         <p class="text-xs text-slate-500 dark:text-slate-400">কোনো প্রশ্ন পাওয়া যায়নি</p>
                     </div>
                 `;
+                paginationEl.classList.add('hidden');
                 return;
             }
 
-            container.innerHTML = filtered.map(q => {
-                const selectedOpt = userAnswers[q.id];
-                const isAnswered = selectedOpt !== undefined;
-                const isBookmarked = bookmarks.has(q.id);
+            paginationEl.classList.remove('hidden');
+            const totalPages = Math.ceil(filtered.length / practiceItemsPerPage) || 1;
+            if (practiceCurrentPage > totalPages) practiceCurrentPage = totalPages;
 
-                return `
-                    <div id="practice-q-${q.id}" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition">
-                        
-                        <!-- Header -->
-                        <div class="flex items-start justify-between gap-3 mb-4">
-                            <div class="flex items-start gap-2.5">
-                                <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
-                                    প্রশ্ন ${toBn(q.id)}
-                                </span>
-                                <h3 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-snug">
-                                    ${q.question}
-                                </h3>
-                            </div>
-                            <button onclick="toggleBookmark(${q.id})" class="text-slate-400 hover:text-amber-500 transition p-1" title="বুকমার্ক">
-                                <i class="${isBookmarked ? 'fa-solid text-amber-500' : 'fa-regular'} fa-bookmark text-base"></i>
-                            </button>
-                        </div>
+            document.getElementById('current-page-bn').innerText = toBn(practiceCurrentPage);
+            document.getElementById('total-pages-bn').innerText = toBn(totalPages);
+            document.getElementById('btn-prev-page').disabled = (practiceCurrentPage === 1);
+            document.getElementById('btn-next-page').disabled = (practiceCurrentPage === totalPages);
 
-                        <!-- Options -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
-                            ${['A', 'B', 'C', 'D'].map(optKey => {
-                                const optText = q[`option${optKey}`];
-                                const bnLabel = { 'A': 'ক', 'B': 'খ', 'C': 'গ', 'D': 'ঘ' }[optKey];
+            const startIndex = (practiceCurrentPage - 1) * practiceItemsPerPage;
+            const paginatedQuestions = filtered.slice(startIndex, startIndex + practiceItemsPerPage);
 
-                                let optStyle = "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200";
-                                let badgeStyle = "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
-
-                                if (isAnswered) {
-                                    if (optKey === q.answer) {
-                                        optStyle = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold";
-                                        badgeStyle = "bg-emerald-500 text-white";
-                                    } else if (selectedOpt === optKey) {
-                                        optStyle = "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-semibold";
-                                        badgeStyle = "bg-rose-500 text-white";
-                                    } else {
-                                        optStyle = "border-slate-200 dark:border-slate-700 opacity-50 text-slate-400";
-                                    }
-                                }
-
-                                return `
-                                    <button onclick="answerPractice(${q.id}, '${optKey}')"
-                                            ${isAnswered ? 'disabled' : ''}
-                                            class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-center gap-3 transition ${optStyle}">
-                                        <span class="w-6 h-6 rounded-lg text-xs flex items-center justify-center font-bold shrink-0 ${badgeStyle}">
-                                            ${bnLabel}
-                                        </span>
-                                        <span class="flex-1">${optText}</span>
-                                        ${isAnswered && optKey === q.answer ? '<i class="fa-solid fa-circle-check text-emerald-600"></i>' : ''}
-                                        ${isAnswered && selectedOpt === optKey && selectedOpt !== q.answer ? '<i class="fa-solid fa-circle-xmark text-rose-600"></i>' : ''}
-                                    </button>
-                                `;
-                            }).join('')}
-                        </div>
-
-                        <!-- Explanation Accordion -->
-                        ${isAnswered ? `
-                            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl space-y-1">
-                                <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                                    <i class="fa-solid fa-lightbulb"></i> সমাধান / ব্যাখ্যা:
-                                </div>
-                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    ${q.explanation || 'কোনো ব্যাখ্যা দেওয়া নেই।'}
-                                </p>
-                            </div>
-                        ` : ''}
-
-                    </div>
-                `;
-            }).join('');
+            container.innerHTML = paginatedQuestions.map(q => generateSingleQuestionCardHTML(q)).join('');
         }
 
+        // --- FAST LOCALIZED OPTION CLICK SOLUTION ---
         function answerPractice(qId, optKey) {
             userAnswers[qId] = optKey;
             
@@ -894,12 +959,24 @@
                 document.getElementById('user-xp-display').innerText = toBn(userXP);
             }
 
-            renderPracticeView();
-            updateDashboardStats();
+            // 1. FAST LOCALIZED CARD UPDATE (No full page re-render)
+            const cardEl = document.getElementById(`practice-q-${qId}`);
+            if (cardEl && q) {
+                cardEl.outerHTML = generateSingleQuestionCardHTML(q);
+                const updatedCardEl = document.getElementById(`practice-q-${qId}`);
+                triggerMathJax(updatedCardEl);
+            }
 
-            // Render math for the specifically updated question element
-            const singleCard = document.getElementById(`practice-q-${qId}`);
-            triggerMathJax(singleCard);
+            // 2. FAST SIDE GRID BUTTON UPDATE
+            const sideBtn = document.getElementById(`side-btn-${qId}`);
+            if (sideBtn && q) {
+                const isCorrect = optKey === q.answer;
+                sideBtn.className = `w-7 h-7 rounded-lg text-[11px] font-bold flex items-center justify-center transition ${isCorrect ? 'bg-emerald-500 text-white font-bold' : 'bg-rose-500 text-white font-bold'}`;
+            }
+
+            // 3. UPDATE COUNTERS & STATS
+            updateCounters();
+            updateDashboardStats();
         }
 
         function toggleBookmark(qId) {
@@ -907,7 +984,15 @@
             else bookmarks.add(qId);
 
             document.getElementById('nav-bookmark-badge').innerText = toBn(bookmarks.size);
-            renderPracticeView();
+            
+            const q = questionsData.find(item => item.id === qId);
+            const cardEl = document.getElementById(`practice-q-${qId}`);
+            if (cardEl && q) {
+                cardEl.outerHTML = generateSingleQuestionCardHTML(q);
+                const updatedCardEl = document.getElementById(`practice-q-${qId}`);
+                triggerMathJax(updatedCardEl);
+            }
+
             updateDashboardStats();
         }
 
@@ -955,9 +1040,21 @@
             examUserAnswers = {};
             examSubmitted = false;
 
+            // Select 50 Random Questions (or fewer if total questions < 50)
+            const shuffled = [...questionsData].sort(() => 0.5 - Math.random());
+            const examCount = Math.min(50, shuffled.length);
+            examQuestionsData = shuffled.slice(0, examCount);
+
+            // Set time allocated (1 min per question)
+            examTimeRemaining = examCount * 60;
+            document.getElementById('exam-q-count').innerText = toBn(examCount);
+            document.getElementById('exam-intro-time').innerText = toBn(examCount);
+
             document.getElementById('exam-intro-card').classList.add('hidden');
             document.getElementById('exam-active-container').classList.remove('hidden');
             document.getElementById('exam-result-container').classList.add('hidden');
+
+            document.getElementById('exam-answered-counter').innerText = `০ / ${toBn(examCount)}`;
 
             renderExamQuestions();
             renderExamSideGrid();
@@ -983,14 +1080,14 @@
 
         function renderExamQuestions() {
             const container = document.getElementById('exam-questions-list');
-            container.innerHTML = questionsData.map(q => {
+            container.innerHTML = examQuestionsData.map((q, index) => {
                 const selectedOpt = examUserAnswers[q.id];
 
                 return `
                     <div id="exam-q-${q.id}" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <div class="flex items-start gap-2.5 mb-4">
                             <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
-                                ${toBn(q.id)}
+                                ${toBn(index + 1)} (${toBn(q.id)})
                             </span>
                             <h3 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-snug">
                                 ${q.question}
@@ -1031,21 +1128,21 @@
             examUserAnswers[qId] = optKey;
             renderExamQuestions();
             renderExamSideGrid();
-            document.getElementById('exam-answered-counter').innerText = `${toBn(Object.keys(examUserAnswers).length)} / ${toBn(questionsData.length)}`;
+            document.getElementById('exam-answered-counter').innerText = `${toBn(Object.keys(examUserAnswers).length)} / ${toBn(examQuestionsData.length)}`;
         }
 
         function renderExamSideGrid() {
             const grid = document.getElementById('exam-side-grid');
             grid.innerHTML = '';
 
-            questionsData.forEach(q => {
+            examQuestionsData.forEach((q, index) => {
                 const isAnswered = examUserAnswers[q.id] !== undefined;
 
                 const btn = document.createElement('button');
                 btn.className = `w-7 h-7 rounded-lg text-[11px] font-bold flex items-center justify-center transition ${
                     isAnswered ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
                 }`;
-                btn.innerText = toBn(q.id);
+                btn.innerText = toBn(index + 1);
                 btn.onclick = () => {
                     const el = document.getElementById(`exam-q-${q.id}`);
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1056,7 +1153,7 @@
 
         function submitExamWithConfirmation() {
             const answered = Object.keys(examUserAnswers).length;
-            if (confirm(`আপনি কি পরীক্ষা জমা দিতে চান? আপনি ${toBn(questionsData.length)}টি প্রশ্নের মধ্যে ${toBn(answered)}টির উত্তর দিয়েছেন।`)) {
+            if (confirm(`আপনি কি পরীক্ষা জমা দিতে চান? আপনি ${toBn(examQuestionsData.length)}টি প্রশ্নের মধ্যে ${toBn(answered)}টির উত্তর দিয়েছেন।`)) {
                 submitExam();
             }
         }
@@ -1072,7 +1169,7 @@
             let correct = 0;
             let wrong = 0;
 
-            questionsData.forEach(q => {
+            examQuestionsData.forEach(q => {
                 const ans = examUserAnswers[q.id];
                 if (ans === q.answer) correct++;
                 else if (ans !== undefined) wrong++;
@@ -1081,7 +1178,7 @@
             const totalAns = Object.keys(examUserAnswers).length;
             const accuracy = totalAns > 0 ? Math.round((correct / totalAns) * 100) : 0;
 
-            document.getElementById('res-score-text').innerHTML = `${toBn(correct)} / <span class="q-count-text">${toBn(questionsData.length)}</span>`;
+            document.getElementById('res-score-text').innerHTML = `${toBn(correct)} / ${toBn(examQuestionsData.length)}`;
             document.getElementById('res-correct-text').innerText = toBn(correct);
             document.getElementById('res-wrong-text').innerText = toBn(wrong);
             document.getElementById('res-accuracy-text').innerText = `${toBn(accuracy)}%`;
@@ -1091,7 +1188,7 @@
 
         function renderExamReview() {
             const container = document.getElementById('exam-review-container');
-            container.innerHTML = questionsData.map(q => {
+            container.innerHTML = examQuestionsData.map((q, index) => {
                 const userAns = examUserAnswers[q.id];
                 const isCorrect = userAns === q.answer;
                 const isSkipped = userAns === undefined;
@@ -1101,7 +1198,7 @@
                         <div class="flex items-start justify-between gap-2">
                             <div class="flex items-start gap-2">
                                 <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0">
-                                    প্রশ্ন ${toBn(q.id)}
+                                    প্রশ্ন ${toBn(index + 1)} (${toBn(q.id)})
                                 </span>
                                 <h4 class="font-semibold text-slate-900 dark:text-slate-100 text-sm sm:text-base">
                                     ${q.question}
@@ -1329,7 +1426,7 @@
                     // Dynamically Update Hero & Title Content if provided or inferred
                     if (metadata.title) {
                         document.getElementById('hero-main-title').textContent = metadata.title;
-                        document.getElementById('page-title').textContent = metadata.title + " | Biohaters Academy";
+                        document.getElementById('page-title').textContent = metadata.title + " | Team Pharmastic";
                     } else if (file.name) {
                         const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
                         document.getElementById('hero-main-title').textContent = cleanName;
@@ -1357,15 +1454,13 @@
                     currentFcIndex = 0;
                     currentFilter = 'all';
                     searchQuery = '';
+                    practiceCurrentPage = 1;
 
-                    // Recalculate Exam Time dynamically (or from metadata)
-                    const calculatedMinutes = metadata.duration ? Number(metadata.duration) : Math.min(60, Math.max(10, imported.length));
-                    examTimeRemaining = calculatedMinutes * 60;
+                    // Recalculate Exam Time dynamically
+                    const calculatedMinutes = metadata.duration ? Number(metadata.duration) : Math.min(50, imported.length);
                     
                     const timeMinutesEl = document.getElementById('hero-exam-minutes');
                     if (timeMinutesEl) timeMinutesEl.innerText = toBn(calculatedMinutes);
-                    const introTimeEl = document.getElementById('exam-intro-time');
-                    if (introTimeEl) introTimeEl.innerText = toBn(calculatedMinutes);
 
                     updateAllCounts();
                     renderPracticeView();
@@ -1382,7 +1477,7 @@
         }
 
         function downloadCSVTemplate() {
-            const csv = '#title,পরিমাণগত রসায়ন — MCQ\r\n#badge,পরিমাণগত রসায়ন\r\n#subtitle,মোল ও গ্যাসের আয়তন · দ্রবণের ঘনমাত্রা · pH · জারণ-বিজারণ · টাইট্রেশন\r\n#duration,60\r\nquestion,optionA,optionB,optionC,optionD,answer,explanation\r\n"STP-তে 22.4 L অক্সিজেন প্রস্তুত করতে কত গ্রাম পটাসিয়াম ক্লোরেট প্রয়োজন?","$56.23\\text{ g}$","$57.16\\text{ g}$","$60.16\\text{ g}$","$81.73\\text{ g}$","D","সঠিক উত্তর D: $81.73\\text{ g}$।"';
+            const csv = '#title,পরিমাণগত রসায়ন — MCQ\r\n#badge,পরিমাণগত রসায়ন\r\n#subtitle,মোল ও গ্যাসের আয়তন · দ্রবণের ঘনমাত্রা · pH · জারণ-বিজারণ · টাইট্রেশন\r\n#duration,50\r\nquestion,optionA,optionB,optionC,optionD,answer,explanation\r\n"STP-তে 22.4 L অক্সিজেন প্রস্তুত করতে কত গ্রাম পটাসিয়াম ক্লোরেট প্রয়োজন?","$56.23\\text{ g}$","$57.16\\text{ g}$","$60.16\\text{ g}$","$81.73\\text{ g}$","D","সঠিক উত্তর D: $81.73\\text{ g}$।"';
             const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8;'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
